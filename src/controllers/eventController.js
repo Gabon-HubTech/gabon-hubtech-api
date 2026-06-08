@@ -17,3 +17,23 @@ exports.createEvent = async (req, res) => {
     res.status(400).json({ success: false, error: error.message });
   }
 };
+
+exports.updateEvent = async (req, res) => {
+  try {
+    const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!event) return res.status(404).json({ success: false, error: "Événement non trouvé." });
+    res.status(200).json({ success: true, data: event });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
+
+exports.deleteEvent = async (req, res) => {
+  try {
+    const event = await Event.findByIdAndDelete(req.params.id);
+    if (!event) return res.status(404).json({ success: false, error: "Événement non trouvé." });
+    res.status(200).json({ success: true, data: {} });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
