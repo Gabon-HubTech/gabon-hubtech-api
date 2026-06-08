@@ -7,6 +7,19 @@ exports.submitContact = async (req, res) => {
   try {
     const { name, email, message } = req.body;
 
+    // Validation serveur de base
+    if (!name || !email || !message) {
+      return res.status(400).json({ success: false, error: "Tous les champs sont obligatoires." });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ success: false, error: "Format d'email invalide." });
+    }
+
+    if (name.length < 2 || message.length < 10) {
+      return res.status(400).json({ success: false, error: "Les données sont trop courtes." });
+    }
+
     // 1. Sauvegarde en base de données
     const newContact = new Contact({ name, email, message });
     await newContact.save();
